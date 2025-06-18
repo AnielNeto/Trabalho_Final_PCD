@@ -78,7 +78,7 @@ tempo_simulacao = 40  # segundos
 ```
 
 <div align="justify">
-  <p> A função largura_pela_massa define a largura - de forma arbritária - dos blocos de acordo com suas massas </p>
+  <p> A função largura_pela_massa define a largura - de forma arbitrária - dos blocos de acordo com suas massas </p>
 </div>
 
 ```python
