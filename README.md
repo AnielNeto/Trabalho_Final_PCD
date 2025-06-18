@@ -36,11 +36,14 @@
 <div align="justify">
   <h3> :book: Base Teórica </h3>
   <p> Neste, elaboraremos os fundamentos teóricos por trás das colisões elásticas assim como explicar a razão por trás do número de colisões: </p>
-  <p> O foco de estudo considera, pela mecânica clássica, colisões elásticas unidimensionais sem atuação de forças externas. Isto significa que todas as colisões são calculadas considerando conservação de energia e do momento linear. Desta forma, as velocidades após colisão de cada bloco são dadas por:</p>
+  <p> O foco de estudo considera, pela mecânica clássica, colisões elásticas unidimensionais sem atuação de forças externas. Isto significa que todas as colisões são calculadas considerando conservação de energia e do momento linear. Desta forma, as velocidades de cada bloco após colisão entre os blocos são dadas por:</p>
   <p> $v1 = ((m1 - m2) * v01 + 2 * m2 * v02) / (m1 + m2)$ </p>
 e </p>
   <p> $v2 = ((m2 - m1) * v02 + 2 * m1 * v01) / (m1 + m2)$ </P>
-  <p> O número de colisões para quaisquer valores de n em $m_2=m_1 *100^n$ possui dígitos de π. É possível construir um gráfico no qual as colisões são representadas por retas em uma circuferência. As retas representam o momento linear e a circuferência, a energia do sistema. O número de retas encontradas entrega o número de colisões. Quando ele é multiplicado pelo ângulo entre as retas, tem-se uma aproximação para π ($N*θ≈π$). Abaixo está o link para um documento com uma explicação mais detalhada, no qual está também a referência para esta explicação. </p>
+  <p> Em que $m1$ e $m2$ são as massas; $v02$ e $v01$ são as velocidades iniciais; e $v1$ e $v2$ são as velocidas após colisão dos blocos 1 e 2 respectivamente.
+  <p> A velocidade do bloco 1 quando este colide com a parede considera a parede como um objeto fixo de forma que age como um reservatório de momento linear. Desta forma, a velocidade após colisão será dada pela inversão do sentido da velocidade anterior à colisão ($v0$):</p>
+  <p> $v1 = -v01$</p>
+  <p> O número de colisões para quaisquer valores de n em $m_2=m_1 *100^n$ possui dígitos de π. Para entender a aparição de π, transforma-se o problema físico em um geométrico. Para tanto, se constrói um plano cartesiano no qual as colisões são representadas por retas secantes em uma circuferência. As retas secantes representam o momento linear e a circuferência, a energia do sistema. O número de retas encontradas entrega o número de colisões. Quando ele é multiplicado pelo ângulo entre as retas, tem-se uma aproximação para π ($N*θ≈π$). Abaixo está o link para um documento com uma explicação mais detalhada, no qual está também a referência para esta explicação. </p>
   <p>
   <a href="https://drive.google.com/file/d/1rJdoKFLGf62c6s6MltdRcfa2FVxxc96C/view?usp=sharing" target="_blank">
     Veja a explicação completa
