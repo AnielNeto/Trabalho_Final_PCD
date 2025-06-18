@@ -42,7 +42,7 @@ e </p>
   <p> $v2 = ((m2 - m1) * v02 + 2 * m1 * v01) / (m1 + m2)$ </P>
   <p> O número de colisões para quaisquer valores de n em $m_2=m_1 *100^n$ possui dígitos de π. É possível construir um gráfico no qual as colisões são representadas por retas em uma circuferência. As retas representam o momento linear e a circuferência, a energia do sistema. O número de retas encontradas entrega o número de colisões. Quando ele é múltiplicado pelo ângulo entre as retas, tem-se uma aproximação para π ($N*θ≈π$). Abaixo está o link para um documento com uma explicação mais detalhada, no qual está também a referência para esta explicação. </p>
   <p>
-  <a href="https://ilumcnpem-my.sharepoint.com/:w:/g/personal/giulio25036_ilum_cnpem_br/EZZmt_qwCxRIq93SwwTMGXEBSbJKZTq9KiUOo2cPZv4f6w?e=qcwi0w" target="_blank">
+  <a href="https://drive.google.com/file/d/1rJdoKFLGf62c6s6MltdRcfa2FVxxc96C/view?usp=sharing" target="_blank">
     Veja a explicação completa
   </a>
 </p>
