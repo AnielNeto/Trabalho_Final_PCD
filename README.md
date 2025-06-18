@@ -22,7 +22,7 @@
   <h3> :open_file_folder: Conteúdos do Repositório </h3>
   <p> Este repositório possui todos os códigos - em notebooks jupyter - necessários para realizar a simulação bem como tabelas que relacionam a razão entre as massas dos corpos e vídeos para visualizar a simulação. </p>
   <ul>
-    <li> :page_facing_up: [Nome do Arquivo principal]: Arquivo principal contendo o código para simulação, criação de gráficos e animações; </li>
+    <li> :page_facing_up: Simulador_de_colisoes_FINAL.ipynb: Arquivo principal contendo o código para simulação, criação de gráficos e animações; </li>
     <li> :page_facing_up: Comparacao_de_massas.ipynb: Arquivo contendo o código para comparar as colisões simuladas em diferentes valores de massa e criar uma tabela com os dados; </li>
     <li> :page_facing_up: particula.png: Imagem utilizada para os efeitos da animação (manter no diretório do arquivo principal para utilizar a simulação sem atualizar o código); </li>
     <li> :sound: som da colisao.mp3: Contém o som utilizado para a marcação das colisões (manter no diretório do arquivo principal para utilizar a simulação sem atualizar o código); </li>
