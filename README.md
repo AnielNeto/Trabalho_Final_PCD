@@ -414,9 +414,9 @@ finally:
     <li> <a href="https://github.com/AnielNeto" target="_blank"> Aniel de Souza Ribeiro Neto </li>
     <p> Contribuições Principais: Adicionou a parede - e colisões com ela - ao sistema e desenvolveu o loop principal da simulação. </p>
     <li> <a href="https://github.com/arthu0404" target="_blank"> Arthur Brandão do Nascimento </li>
-    <p> Contribuições Principais: Adicionou a largura dos blocos ao loop principal da simulação e adicionou a animação do sistema. </p>
+    <p> Contribuições Principais: Adicionou a largura dos blocos ao loop principal da simulação (centro de massa). Melhorou e refinou a animação do sistema. </p>
     <li> <a href="https://github.com/Giulio-Roux" target="_blank"> Giulio Oertel Spinelli Roux César </li>
-    <p> Contribuições Principais: Desenvolveu a base do código, simulando uma colisão entre dois blocos e criando um gráfico de suas posições, e criou a base da animação para um bloco. </p>
+    <p> Contribuições Principais: Desenvolveu a base do código, simulando uma colisão entre dois blocos e criando um gráfico de suas posições. Criou a base da animação para colisão entre blocos desconsiderando os centros de massa. Escreveu o código que fez as tabelas da comparação de resultados. Escreveu o arquivo da explicação da aproximação de pi. </p>
     <li> <a href="https://github.com/otmaia" target="_blank"> Luís Otávio Alves Maia </li>
     <p> Contribuições Principais: Corrigiu um problema de atravessamento de corpos na simulação principal, adicionou partes para checar a eficiência do código. </p>
   </ul>
