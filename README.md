@@ -27,7 +27,7 @@
     <li> :page_facing_up: particula.png: Imagem utilizada para os efeitos da animação (manter no diretório do arquivo principal para utilizar a simulação sem atualizar o código); </li>
     <li> :sound: som da colisao.mp3: Contém o som utilizado para a marcação das colisões (manter no diretório do arquivo principal para utilizar a simulação sem atualizar o código); </li>
     <li> :file_folder: Imagens: Contém as imagens utilizadas para o Readme e outras partes não necessárias para a simulação; </li>
-    <li> :file_folder:Resultados: Contém tabelas geradas com o arquivo Comparacao_de_massas para duas razões, assim como um vídeo exemplo da animação gerada pelo código. </li>
+    <li> :file_folder:Resultados: Contém tabelas e txt's gerados com o arquivo Comparacao_de_massas para duas razões, assim como um vídeo exemplo da animação gerada pelo código. </li>
   </ul>
 </div>
 
@@ -54,7 +54,7 @@
 <div align="justify">
   <h4> :heavy_exclamation_mark: Recursos necessários </h3>
   <ul>
-    <li> Bibliotecas necessárias: matplotlib, pygame, numpy, time; </li>
+    <li> Bibliotecas necessárias: matplotlib, pygame, numpy, pandas, time; </li>
     <li> Plataforma capaz de executar notebooks python; </li>
     <li> Arquivos complementares ao código salvos no mesmo diretório do notebook: particula.png e som da colisao.mp3 </li>
   </ul>
@@ -255,12 +255,145 @@ plt.show()
 
 <div align="justify">
   <h4> :pushpin: Criação da animação </h4>
-  <p> "Breve introdução para o código da animação" </p>
+  <p> Cria a animação da simulação utilizando a biblioteca pygame.</p>
+  <p> Define as variáveis base da biblioteca: </p>
 </div>
 
 ```python
-# Corte do código
+# Inicializa o Pygame
+pygame.init()
+pygame.mixer.init()
+
+# Configurações da janela
+LARGURA, ALTURA = 1280, 720
+tela = pygame.display.set_mode((LARGURA, ALTURA))
+pygame.display.set_caption("Simulação de Colisão")
+
+# Cores
+BRANCO = (255, 255, 255)
+VERMELHO = (255, 0, 0)
+AZUL = (0, 0, 255)
+PRETO = (0, 0, 0)
+LARANJA = (255, 209, 145)
+
+# Ajuste da escala para visualização
+espaco_necessario = 200
+ESCALA = LARGURA / espaco_necessario  # Escala baseada na quantidade de espaço necessária em metros
+
+# Tamanho em pixels dos objetos
+LADO1, LADO2 = int(l1 * ESCALA), int(l2 * ESCALA ) # Converte para pixels
+DIFERENCA = max(LADO1, LADO2) - min(LADO1, LADO2) # Isso é para corrigir uma diferença de altura (sem isso, os blocos não estariam ambos encostados no chão)
+
+# Posição do chão
+altura_do_chao = LARGURA // 2.5
+
+# Definindo variáveis da animação
+relogio = pygame.time.Clock()
+executando = True
+simulador_ativo = True
+tempo_inicio_animacao = time.time()
+contador_esquerda_anterior = 0
+contador_direita_anterior = 0
+duracao = 0
 ```
+
+<div align="justify">
+  <p> Cria o loop principal da animação: </p>
+</div>
+
+```python
+# Loop da animação
+
+try:
+    while executando:
+        tela.fill(PRETO)
+        
+        # Eventos do sistema (fechar janela e recomeçar)
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                executando = False
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_r: # Caso a tecla "R" for pressionada a animação irá recomeçar
+                simulador_ativo = True
+                tempo_inicio_animacao = time.time()
+                duracao = 0
+
+        # Nos diz o tempo atual de simulação, isso ajuda sicronizar a animação com o tempo real
+        tempo_atual_animacao = time.time() - tempo_inicio_animacao
+
+        if simulador_ativo == True:
+            frame_atual = int(tempo_atual_animacao * fps)
+            if frame_atual >= len(frames): # Se já chegou ao final mantém o último frame e indica que a animação foi concluida
+                frame_atual = len(frames) -1
+                simulador_ativo = False
+        
+        x1_simulado, x2_simulado, contador_atual, contador_esquerda_atual, contador_direita_atual = frames[frame_atual]
+
+        # Conversão de posições físicas para pixels 
+        x1_s = int((x1_simulado - l1/2) * ESCALA)  # O -l1/2 serve para transformar os calculos que estavam no centro para o canto esquerdo (o pygame tem como origem o canto superior esquerdo)
+        x2_s = int((x2_simulado - l2/2) * ESCALA)
+        x_parede_s = int(x_parede * ESCALA) 
+
+        # Desenha a parede
+        pygame.draw.line(tela, BRANCO, (x_parede_s, 0), (x_parede_s, altura_do_chao), 4)
+        
+        # Desenha o bloco 1:
+        pygame.draw.rect(tela, VERMELHO, (x1_s, altura_do_chao - LADO1, LADO1, LADO1))
+        pygame.draw.rect(tela, BRANCO, (x1_s, altura_do_chao - LADO1, LADO1, LADO1), 2)  # Borda
+
+        # Desenha o bloco 2:
+        pygame.draw.rect(tela, AZUL, (x2_s, altura_do_chao - LADO2, LADO2, LADO2))
+        pygame.draw.rect(tela, BRANCO, (x2_s, altura_do_chao - LADO2, LADO2, LADO2), 2)  # Borda
+
+        # Desenha a linha no nível da altura do chão
+        pygame.draw.line(tela, BRANCO, (x_parede_s,altura_do_chao), (LARGURA, altura_do_chao), 4)
+        
+        # Adicionando os efeitos visuais de partículas e sonoros na colisão
+        particula = pygame.image.load("particula.png")
+        som_colisao = pygame.mixer.Sound("som da colisao.mp3")
+        tamanho = (25, 25) # tamanho da partícula de efeito
+        particula_redimencionada = pygame.transform.scale(particula, tamanho)
+        
+        if contador_esquerda_atual != contador_esquerda_anterior:
+            duracao = tempo_atual_animacao + 0.080 # Duração em segundos
+            x_partciula = x1_s
+            som_colisao.play()
+
+        if contador_direita_atual != contador_direita_anterior:
+            duracao = tempo_atual_animacao + 0.080
+            x_partciula = x1_s - LADO1
+            som_colisao.play()
+
+        if duracao > tempo_atual_animacao:
+            if duracao - tempo_atual_animacao <= 0.75:
+                tamanho = (28, 28)
+            elif duracao - tempo_atual_animacao <= 0.50:
+                tamanho = (31, 31)
+            elif duracao - tempo_atual_animacao <= 0.25:
+                tamanho = (34, 34)
+
+            tela.blit(particula_redimencionada, (x_partciula + LADO1 - tamanho[0]/2, altura_do_chao - LADO1/2 - tamanho[0]/2))
+
+        contador_esquerda_anterior = contador_esquerda_atual
+        contador_direita_anterior = contador_direita_atual
+
+
+        # Indica na tela o número de colisões
+        fonte = pygame.font.SysFont(None, 36)
+        texto_contador = fonte.render(f"Número de colisões: {contador_atual}", True, BRANCO)
+        tela.blit(texto_contador, (x_parede_s + 30, 15))
+
+        # Caso a animação tenha acabado aperece um texto na tela
+        if simulador_ativo == False:
+            texto = fonte.render("Simulação concluída - Clique no X para fechar", True, BRANCO)
+            tela.blit(texto, (LARGURA//2 - 200, 100))
+
+        pygame.display.flip()  # Atualiza a tela
+        relogio.tick(120)  # Limite de fps da tela
+        
+finally:
+    pygame.quit()
+```
+
 
 <div align="justify">
   <h3> :memo: Licensa </h3>
