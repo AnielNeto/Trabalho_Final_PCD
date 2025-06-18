@@ -36,9 +36,13 @@
 <div align="justify">
   <h3> :book: Base Teórica </h3>
   <p> Neste, elaboraremos os fundamentos teóricos por trás das colisões elásticas assim como explicar a razão por trás do número de colisões: </p>
+  <p> O foco de estudo considera, pela mecânica clássica, colisões elásticas unidimensionais sem atuação de forças externas. Isto significa que todas as colisões consideraram a conservação de energia e do momento linear. Desta forma, as velocidades após colisão de cada bloco é dada por:</p>
+  <p> $v1 = ((m1 - m2) * v01 + 2 * m2 * v02) / (m1 + m2)$ </p>
+e </p>
+  <p> $v2 = ((m2 - m1) * v02 + 2 * m1 * v01) / (m1 + m2)$ </P>
   <p> O número de colisões para quaisquer valores de n em $m_2=m_1 *100^n$ possui dígitos de π. É possível construir um gráfico no qual as colisões são representadas por retas em uma circuferência. As retas representam o momento linear e a circuferência, a energia do sistema. O número de retas encontradas entrega o número de colisões. Quando ele é múltiplicado pelo ângulo entre as retas, tem-se uma aproximação para π ($N*θ≈π$). Abaixo está o link para um documento com uma explicação mais detalhada, no qual está também a referência para esta explicação. </p>
   <p>
-  <a href="https://ilumcnpem-my.sharepoint.com/personal/giulio25036_ilum_cnpem_br/Documents/Explicacao_aproximacao_pi.pdf" target="_blank">
+  <a href="https://ilumcnpem-my.sharepoint.com/:w:/g/personal/giulio25036_ilum_cnpem_br/EZZmt_qwCxRIq93SwwTMGXEBSbJKZTq9KiUOo2cPZv4f6w?e=qcwi0w" target="_blank">
     Veja a explicação completa
   </a>
 </p>
