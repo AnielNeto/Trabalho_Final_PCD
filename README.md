@@ -58,7 +58,7 @@ e </p>
 <div align="justify">
   <h4> :heavy_exclamation_mark: Recursos necessários </h3>
   <ul>
-    <li> Bibliotecas necessárias: matplotlib, pygame, numpy, pandas, time; </li>
+    <li> Bibliotecas necessárias: matplotlib, pygame, numpy, time; </li>
     <li> Plataforma capaz de executar notebooks python; </li>
     <li> Arquivos complementares ao código salvos no mesmo diretório do notebook: particula.png e som da colisao.mp3 </li>
   </ul>
