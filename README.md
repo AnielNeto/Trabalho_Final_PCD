@@ -264,7 +264,7 @@ plt.show()
 
 <div align="justify">
   <h3> :memo: Licensa </h3>
-  <p> "Nome da licensa" </p>
+  <p> GPL 3.0 </p>
 </div>
 
 <div align="justify">
