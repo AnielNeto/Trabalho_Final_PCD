@@ -11,7 +11,7 @@
 <div align='justify'>
   <h3> :bookmark_tabs: Introdução </h4>
   <p> Repositório para o trabalho final da disciplina Prática em Ciência de Dados. </p>
-  <p> O trabalho consiste em uma simulação de um sistema unidimensional de colisões elásticas envolvendo dois blocos e uma parede, incluindo apresentações em gráficos e animações. O sistema possui um bloco de massa inferior inicialmente parado e um bloco de massa superior se movendo em direção ao primeiro, de modo que os blocos colidam e oprimeiro bloco seja lançado sobre a parede e colida com a mesma, sendo lançado novamente contra o outro bloco, repetindo esse processo durante o tempo de simulação. </p>
+  <p> O trabalho consiste em uma simulação de um sistema unidimensional de colisões elásticas envolvendo dois blocos e uma parede, incluindo apresentações em gráfico e animação. O sistema possui um bloco de massa inferior inicialmente parado e um bloco de massa superior se movendo em direção ao primeiro, de modo que os blocos colidam e o primeiro bloco seja lançado sobre a parede e colida com a mesma, sendo lançado novamente contra o outro bloco, repetindo esse processo durante o tempo de simulação. </p>
   <p> O simulador calcula a trajetória através do tempo dos corpos do sistema e conta o número de colisões que ocorreram, apresentando essa trajetória em um gráfico e na forma de uma animação didática. O projeto tem o objetivo de auxiliar no entendimento de colisões elásticas e apresentar relações entre a massa dos corpos e o número de colisões. </p>
   <p> O trabalho se aprofundará especialmente no estudo e apresentação da razão de massas dos corpos que resulta em um número de colisões que seguem os dígitos de pi. </p>
 </div>
