@@ -412,7 +412,7 @@ finally:
   <p> Alunos: </p>
   <ul>
     <li> <a href="https://github.com/AnielNeto" target="_blank"> Aniel de Souza Ribeiro Neto </li>
-    <p> Contribuições Principais: Adicionou a parede - e colisões com ela - ao sistema e desenvolveu o loop principal da simulação. </p>
+    <p> Contribuições Principais: Adicionou a parede - e colisões com ela - ao sistema e desenvolveu o loop principal da simulação. Escreveu o código para repetição da simulação para o arquivo de comparação de massas.</p>
     <li> <a href="https://github.com/arthu0404" target="_blank"> Arthur Brandão do Nascimento </li>
     <p> Contribuições Principais: Adicionou a largura dos blocos ao loop principal da simulação (centro de massa). Melhorou e refinou a animação do sistema. </p>
     <li> <a href="https://github.com/Giulio-Roux" target="_blank"> Giulio Oertel Spinelli Roux César </li>
