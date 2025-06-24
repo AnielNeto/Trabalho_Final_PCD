@@ -73,8 +73,8 @@ e </p>
 
 ```python
 # Definindo constantes
-m1, m2 = 1, 1000000000000  # massas em kg
-v01, v02 = 0, -30  # velocidades iniciais em m/s
+m1, m2 = 1, 1000000  # massas em kg
+v01, v02 = 0, -15  # velocidades iniciais em m/s
 x01, x02 = 50, 100  # posições iniciais em metros
 x_parede = 20  # posição da parede em metros
 tempo_simulacao = 40  # segundos
@@ -167,7 +167,7 @@ def pos(x0, v0, t):
   
 ```python
 # Variáveis para a simulação
-fps = 12000  # A quantidade de frames por segundo (quanto maior esse número, maior o tempo de simulação)
+fps = 120000  # A quantidade de frames por segundo (quanto maior esse número, maior o tempo de simulação)
 t = np.linspace(0, tempo_simulacao, fps * tempo_simulacao)  # Lista de tempos para simulação
 x1, x2 = [], []  # Listas de posições ao longo da simulação
 l1, l2 = largura_pela_massa(m1), largura_pela_massa(m2)
@@ -212,7 +212,7 @@ for _ in t:
     # Checa se já ocorreu o número máximo de colisões
     if v1_simulado >= 0 and v2_simulado >= 0 and v2_simulado > v1_simulado:
         # Adiciona frames extras para facilitar a visualização após o fim das colisões 
-        segundos_extras = 8
+        segundos_extras = 3
         passos_extras = int(segundos_extras * fps)
 
         for _ in range(passos_extras):
@@ -281,7 +281,6 @@ BRANCO = (255, 255, 255)
 VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 PRETO = (0, 0, 0)
-LARANJA = (255, 209, 145)
 
 # Ajuste da escala para visualização
 espaco_necessario = x02 + 100
