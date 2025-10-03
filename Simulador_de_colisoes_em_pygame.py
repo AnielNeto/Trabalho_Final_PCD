@@ -109,6 +109,48 @@ class CaixaTexto:
                            (cursor_x, self.rect.y + self.rect.height - 3), 
                            2)
 
+# Botões:
+class Botao:
+    def __init__(self, tamanho, tamanho_hover, pos, pos_hover, imagem):
+        
+        # Define imagens e rects (normal e hover)
+        img = pygame.image.load(f"Imagens/Botões/{imagem}.png")
+        img_hover = pygame.image.load(f"Imagens/Botões/{imagem}_h.png")
+
+        rect = pygame.Rect(pos, tamanho)
+        rect_hover =  pygame.Rect(pos_hover, tamanho_hover)
+        self.rect = rect # Rect inicial
+
+        # Armazena parâmetros
+        self.imgs = (img, img_hover)
+        self.rects = (rect, rect_hover)
+        self.tamanhos = (tamanho, tamanho_hover)
+        self.posicoes = (pos, pos_hover)
+        self.som = pygame.mixer.Sound("som da colisao.mp3")
+
+
+    def draw(self, surface):
+        mouse_pos = pygame.mouse.get_pos()
+
+        hovering = self.rect.collidepoint(mouse_pos)
+
+        # Tocar som
+        if hovering and self.rect == self.rects[0]:
+            self.som.play()
+
+        # Checa se o mouse está sobre o botão e define os parâmetros utilizados (normal ou hover)
+        if hovering: 
+            self.img = self.imgs[1] 
+            self.pos = self.posicoes[1] 
+            self.rect = self.rects[1]  
+        else:
+            self.img = self.imgs[0] 
+            self.pos = self.posicoes[0] 
+            self.rect = self.rects[0]
+
+        # Desenha botão
+        surface.blit(self.img, self.pos)
+
 # Abrir Menu
 def abrir_menu(valores_iniciais):
     """
@@ -131,8 +173,7 @@ def abrir_menu(valores_iniciais):
     for i in range(9):
         caixas_texto.append(CaixaTexto(233, 190 + 53*i, 295, 33, str(valores_iniciais[i])))
 
-    botao_enviar = pygame.Rect(962, 577, 246, 65)
-    
+    botao_enviar = Botao((246, 65), (270, 71), (962, 577), (951, 574), "botao_simular")
     
     # Loop - Menu aberto
 
@@ -157,7 +198,7 @@ def abrir_menu(valores_iniciais):
                 caixa_texto.manipular_evento(evento)
             
             if evento.type == pygame.MOUSEBUTTONDOWN: # Clicou com o botão do mouse
-                if botao_enviar.collidepoint(evento.pos): # Clicou no botão de enviar
+                if botao_enviar.rect.collidepoint(evento.pos): # Clicou no botão de enviar
                     # Fecha o menu e retorna os parâmetros
                     menu_aberto = False
                     return [int(caixa_texto.texto) for caixa_texto in caixas_texto]
@@ -169,6 +210,9 @@ def abrir_menu(valores_iniciais):
             
             # Desenhar caixa de texto
             caixas_texto[i].desenhar(tela)
+
+        # Desenhar botão
+        botao_enviar.draw(tela)
 
         # Atualiza o display
         pygame.display.flip()
@@ -271,7 +315,7 @@ def mostrar_grafico():
     background = pygame.image.load("Imagens/grafico.png")
 
     # Botão de voltar
-    botao_voltar = pygame.Rect(1093, 625, 196, 65)
+    botao_voltar = Botao((124, 65), (135, 71), (1127, 625), (1122, 622), "botao_voltar")
     
     # Loop - menu aberto
 
@@ -281,6 +325,9 @@ def mostrar_grafico():
 
         # Desenhar gráfico
         tela.blit(grafico_surface, (111, 92))
+
+        # Desenhar botao
+        botao_voltar.draw(tela)
 
         # Eventos do sistema
         for evento in pygame.event.get():
@@ -293,7 +340,7 @@ def mostrar_grafico():
                 return True
 
             if evento.type == pygame.MOUSEBUTTONDOWN: # Clique com botão do mouse
-                if botao_voltar.collidepoint(evento.pos): # Clicou no botão de voltar
+                if botao_voltar.rect.collidepoint(evento.pos): # Clicou no botão de voltar
                     # Fecha a animação e mantem o programa ligado
                     grafico_ativo = False
                     return True
@@ -332,6 +379,12 @@ def rodar_animacao():
     # Background
     background = pygame.image.load("Imagens/simulacao.png")
     background_final = pygame.image.load("Imagens/fim_simulacao.png")
+
+    # Botão de alterar parametros
+    botao_parametros = Botao((234, 65), (260, 72), (1006, 535), (993, 532), "botao_parametros")
+
+    # Botão do gráfico
+    botao_grafico = Botao((234, 65), (260, 72) ,(1006, 633), (993, 630), "botao_grafico")
 
     # Loop - animação aberta
 
@@ -433,25 +486,22 @@ def rodar_animacao():
             texto_contador = fonte.render(f"Número de colisões: {contador_atual}", True, PRETO)
             tela.blit(texto_contador, (x_parede_s + 30, 15))
 
-            # Caso a animação tenha acabado aperece um texto na tela
+            # Caso a animação tenha acabado aperece um texto e os botões na tela
             if animacao_ativa == False:
                 texto = fonte.render("Simulação concluída - Clique no X para fechar", True, PRETO)
                 tela.blit(texto, (LARGURA//2 - 200, 100))
 
-                # Botão de alterar parametros
-                botao_parametros = pygame.Rect(1006, 633, 234, 65)
-
-                # Botão de enviar
-                botao_grafico = pygame.Rect(1006, 535, 234, 65)
+                botao_parametros.draw(tela)
+                botao_grafico.draw(tela)
 
                 # Eventos da simulação
                 for evento in pygame.event.get():
                     if evento.type == pygame.MOUSEBUTTONDOWN: # Clicou com o botão do mouse
-                        if botao_parametros.collidepoint(evento.pos): # Clicou no botão de aletrar parametros
+                        if botao_parametros.rect.collidepoint(evento.pos): # Clicou no botão de aletrar parametros
                             # Sai da simulação, mantendo o programa ligado
                             simulacao_ativa = False
                             return False
-                        if botao_grafico.collidepoint(evento.pos): # Clicou no botão de mostrar gráfico
+                        if botao_grafico.rect.collidepoint(evento.pos): # Clicou no botão de mostrar gráfico
                             # Mostra o gráfico
                             simulacao_ativa = mostrar_grafico()
                             if not simulacao_ativa: # Confere se a simulação continua ligada
