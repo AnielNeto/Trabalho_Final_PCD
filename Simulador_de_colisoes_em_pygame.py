@@ -67,7 +67,6 @@ def largura_pela_massa(m):
 class CaixaTexto:
     def __init__(self, x, y, largura, altura, texto_inicial):
         self.rect = pygame.Rect(x, y, largura, altura)
-        self.cor = CINZA
         self.texto = texto_inicial
         self.ativo = False
         self.cursor_visivel = True
@@ -78,10 +77,8 @@ class CaixaTexto:
             # Verificar se clicou na caixa de texto
             if self.rect.collidepoint(evento.pos):
                 self.ativo = True
-                self.cor = AZUL
             else:
                 self.ativo = False
-                self.cor = CINZA
         
         if evento.type == pygame.KEYDOWN and self.ativo:
             if evento.key == pygame.K_BACKSPACE: # Apertou a tecla de apagar
@@ -95,25 +92,64 @@ class CaixaTexto:
     def atualizar(self):
         # Piscar o cursor
         self.tempo_cursor += 1
-        if self.tempo_cursor > 600:  # A cada 600 frames
+        if self.tempo_cursor > 360:  # A cada 360 frames
             self.cursor_visivel = not self.cursor_visivel
             self.tempo_cursor = 0
     
     def desenhar(self, superficie):
-        # Desenhar a caixa
-        pygame.draw.rect(superficie, self.cor, self.rect, 2)
-        
         # Desenhar o texto
         texto_surface = fonte.render(self.texto, True, BRANCO)
-        superficie.blit(texto_surface, (self.rect.x + 5, self.rect.y + 5))
+        superficie.blit(texto_surface, (self.rect.x + 20, self.rect.y + 3))
         
         # Desenhar cursor se estiver ativo
         if self.ativo and self.cursor_visivel:
-            cursor_x = self.rect.x + 5 + texto_surface.get_width()
+            cursor_x = self.rect.x + 20 + texto_surface.get_width()
             pygame.draw.line(superficie, BRANCO, 
-                           (cursor_x, self.rect.y + 5),
-                           (cursor_x, self.rect.y + self.rect.height - 5), 
+                           (cursor_x, self.rect.y + 4),
+                           (cursor_x, self.rect.y + self.rect.height - 3), 
                            2)
+
+# Botões:
+class Botao:
+    def __init__(self, tamanho, tamanho_hover, pos, pos_hover, imagem):
+        
+        # Define imagens e rects (normal e hover)
+        img = pygame.image.load(f"Imagens/Botões/{imagem}.png")
+        img_hover = pygame.image.load(f"Imagens/Botões/{imagem}_h.png")
+
+        rect = pygame.Rect(pos, tamanho)
+        rect_hover =  pygame.Rect(pos_hover, tamanho_hover)
+        self.rect = rect # Rect inicial
+
+        # Armazena parâmetros
+        self.imgs = (img, img_hover)
+        self.rects = (rect, rect_hover)
+        self.tamanhos = (tamanho, tamanho_hover)
+        self.posicoes = (pos, pos_hover)
+        self.som = pygame.mixer.Sound("som da colisao.mp3")
+
+
+    def draw(self, surface):
+        mouse_pos = pygame.mouse.get_pos()
+
+        hovering = self.rect.collidepoint(mouse_pos)
+
+        # Tocar som
+        if hovering and self.rect == self.rects[0]:
+            self.som.play()
+
+        # Checa se o mouse está sobre o botão e define os parâmetros utilizados (normal ou hover)
+        if hovering: 
+            self.img = self.imgs[1] 
+            self.pos = self.posicoes[1] 
+            self.rect = self.rects[1]  
+        else:
+            self.img = self.imgs[0] 
+            self.pos = self.posicoes[0] 
+            self.rect = self.rects[0]
+
+        # Desenha botão
+        surface.blit(self.img, self.pos)
 
 # Abrir Menu
 def abrir_menu(valores_iniciais):
@@ -127,49 +163,34 @@ def abrir_menu(valores_iniciais):
 
     Retorno:
     parametros: o valor final dos parâmetros definidos pelo usuário
-    -Retorna False se o programa for desligado
+    -Retorna False se o jogador retornar para a tela inicial
     """
+    # Importar background
+    background = pygame.image.load("Imagens/parametros.png")
+
     # Criar caixa de texto
     caixas_texto = []
     for i in range(9):
-        caixas_texto.append(CaixaTexto(200, 100 + 70*i, 300, 50, str(valores_iniciais[i])))
+        caixas_texto.append(CaixaTexto(233, 190 + 53*i, 295, 33, str(valores_iniciais[i])))
 
-    # Criar textos
-    nomes_textos = ["Massa 1", "Massa 2", "Vel 1", "Vel 2", "Pos 1", "Pos 2", "Pos Parede", "Tempo", "fps"]
-    textos = []
-    for i in range(9):
-        textos.append((nomes_textos[i], 180, 100 + 70*i))
-
-    def desenhar_texto(nome, x, y):
-        """Essa função desenha um texto a partir do texto (nome) e posição (x, y)"""
-        texto = fonte.render(nome, True, BRANCO)
-        tela.blit(texto, (x - texto.get_width(), y))
-
-    # Botão de enviar
-    texto_botao = fonte.render("Iniciar Simulação", True, BRANCO)
-    botao_enviar = pygame.Rect(1240 - texto_botao.get_width(), 680 - texto_botao.get_height(), texto_botao.get_width() + 20, texto_botao.get_height() + 20)
-    
+    botao_enviar = Botao((246, 65), (270, 71), (962, 577), (951, 574), "botao_simular")
     
     # Loop - Menu aberto
 
     menu_aberto = True # Determina se o menu está aberto ou não
 
     while menu_aberto:
-        tela.fill(PRETO) 
-
-        # Título do Menu
-        texto_titulo = fonte.render("Definir parâmetros da simulação", True, BRANCO)
-        tela.blit(texto_titulo, ((LARGURA-texto_titulo.get_width())/2, 30))
+        # Carregar Background
+        tela.blit(background, (0, 0))
 
         # Eventos da Simulação
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT: # Clicou no X
-                # Fecha o menu e desliga o programa
-                menu_aberto = False
-                return False
+                # Desliga o programa
+                pygame.quit()
 
             if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE: # Clicou em Esc
-                # Fecha o menu e desliga o programa
+                # Fecha o menu e volta pra tela inicial
                 menu_aberto = False
                 return False
             
@@ -177,7 +198,7 @@ def abrir_menu(valores_iniciais):
                 caixa_texto.manipular_evento(evento)
             
             if evento.type == pygame.MOUSEBUTTONDOWN: # Clicou com o botão do mouse
-                if botao_enviar.collidepoint(evento.pos): # Clicou no botão de enviar
+                if botao_enviar.rect.collidepoint(evento.pos): # Clicou no botão de enviar
                     # Fecha o menu e retorna os parâmetros
                     menu_aberto = False
                     return [int(caixa_texto.texto) for caixa_texto in caixas_texto]
@@ -190,12 +211,8 @@ def abrir_menu(valores_iniciais):
             # Desenhar caixa de texto
             caixas_texto[i].desenhar(tela)
 
-            # Desenhar textos
-            desenhar_texto(textos[i][0], textos[i][1], textos[i][2])
-        
         # Desenhar botão
-        pygame.draw.rect(tela, VERMELHO, botao_enviar, border_radius=10)
-        tela.blit(texto_botao, (botao_enviar.x + 10, botao_enviar.y + 10))
+        botao_enviar.draw(tela)
 
         # Atualiza o display
         pygame.display.flip()
@@ -291,39 +308,39 @@ def mostrar_grafico():
     # Carregar gráfico
     grafico_surface = pygame.image.load("grafico.png")
 
-    # Redimensionar para ocupar toda a janela
-    grafico_surface = pygame.transform.smoothscale(grafico_surface, (LARGURA, ALTURA))
+    # Redimensionar
+    grafico_surface = pygame.transform.smoothscale(grafico_surface, (953, 599))
+
+    # Background
+    background = pygame.image.load("Imagens/grafico.png")
 
     # Botão de voltar
-    texto_botao = fonte.render("Voltar", True, BRANCO)
-    botao_voltar = pygame.Rect(1240 - texto_botao.get_width(), 680 - texto_botao.get_height(), texto_botao.get_width() + 20, texto_botao.get_height() + 20)
+    botao_voltar = Botao((124, 65), (135, 71), (1127, 625), (1122, 622), "botao_voltar")
     
     # Loop - menu aberto
 
     grafico_ativo = True
     while grafico_ativo:
-        tela.fill(PRETO)
+        tela.blit(background, (0, 0))
 
         # Desenhar gráfico
-        tela.blit(grafico_surface, (0, 0))
+        tela.blit(grafico_surface, (111, 92))
 
-        # Desenhar botão
-        pygame.draw.rect(tela, VERMELHO, botao_voltar, border_radius=10)
-        tela.blit(texto_botao, (botao_voltar.x + 10, botao_voltar.y + 10))
+        # Desenhar botao
+        botao_voltar.draw(tela)
 
         # Eventos do sistema
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT: # Apertou o X
                 # Fecha a animação e desliga o programa
-                grafico_ativo = False
-                return False
+                pygame.quit()
             if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE: # Apertou Esc
                 # Fecha a animação e mantem o programa ligado
                 grafico_ativo = False
                 return True
 
             if evento.type == pygame.MOUSEBUTTONDOWN: # Clique com botão do mouse
-                if botao_voltar.collidepoint(evento.pos): # Clicou no botão de voltar
+                if botao_voltar.rect.collidepoint(evento.pos): # Clicou no botão de voltar
                     # Fecha a animação e mantem o programa ligado
                     grafico_ativo = False
                     return True
@@ -357,24 +374,36 @@ def rodar_animacao():
     duracao_da_particula = 0 # Duração do efeito de partícula de colisão, que inicialmente é 0
 
     # Inicialização da fonte
-    fonte_2 = pygame.font.SysFont(None, 36)
+    fonte_2 = pygame.font.SysFont("Helvetica", 28)
+
+    # Background
+    background = pygame.image.load("Imagens/simulacao.png")
+    background_final = pygame.image.load("Imagens/fim_simulacao.png")
+
+    # Botão de alterar parametros
+    botao_parametros = Botao((234, 65), (260, 72), (1006, 535), (993, 532), "botao_parametros")
+
+    # Botão do gráfico
+    botao_grafico = Botao((234, 65), (260, 72) ,(1006, 633), (993, 630), "botao_grafico")
 
     # Loop - animação aberta
 
     try:
         while simulacao_ativa:
-            tela.fill(PRETO)
+            if animacao_ativa:
+                tela.blit(background, (0, 0))
+            else:
+                tela.blit(background_final, (0, 0))
             
             # Eventos do sistema
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT: # Clicou no X
                     # Fecha a animação e desliga o programa
-                    simulacao_ativa = False
-                    return False
+                    pygame.quit()
                 if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE: # Clicou na tecla Esc
                     # Fecha a animação e mantem o programa ligado
                     simulacao_ativa = False
-                    return True
+                    return False
                 if evento.type == pygame.KEYDOWN and evento.key == pygame.K_r: # Clicou na tecla R
                     # Reinicia a animação
                     animacao_ativa = True
@@ -385,7 +414,7 @@ def rodar_animacao():
                 if evento.type == pygame.KEYDOWN and evento.key == pygame.K_x: # Clicou na tecla X
                     # Fecha a animação e mantem o programa ligado
                     simulacao_ativa = False
-                    return True
+                    return False
 
             # Nos diz o tempo atual de simulação, isso ajuda sicronizar a animação com o tempo real
             tempo_atual_animacao = time.time() - tempo_inicio_animacao
@@ -412,16 +441,16 @@ def rodar_animacao():
             pygame.draw.rect(tela, BRANCO, (x1_s, altura_do_chao - LADO1, LADO1, LADO1), 2) # Borda do bloco
 
             # Texto em cima bloco 1:
-            texto_m1 = fonte_2.render(f"{m1:,} Kg", True, BRANCO)
-            tela.blit(texto_m1, (x1_s + LADO1 // 6, altura_do_chao - LADO1 - 27))
+            texto_m1 = fonte_2.render(f"{m1:,} Kg", True, PRETO)
+            tela.blit(texto_m1, (x1_s + (LADO1 - texto_m1.get_width())/2  , altura_do_chao - LADO1 - 30))
             
             # Desenho do bloco 2:
             pygame.draw.rect(tela, AZUL, (x2_s, altura_do_chao - LADO2, LADO2, LADO2)) # Desenha o bloco
             pygame.draw.rect(tela, BRANCO, (x2_s, altura_do_chao - LADO2, LADO2, LADO2), 2) # Borda do bloco
 
             # Texto em cima do bloco 2:
-            texto_m2 = fonte_2.render(f"{m2:,} Kg", True, BRANCO)
-            tela.blit(texto_m2, (x2_s + LADO2 // 6, altura_do_chao - LADO2 - 27))
+            texto_m2 = fonte_2.render(f"{m2:,} Kg", True, PRETO)
+            tela.blit(texto_m2, (x2_s + (LADO2 - texto_m2.get_width())/2, altura_do_chao - LADO2 - 30))
 
             # Desenha a linha no nível da altura do chão
             pygame.draw.line(tela, BRANCO, (x_parede_s,altura_do_chao), (LARGURA, altura_do_chao), 4)
@@ -454,40 +483,29 @@ def rodar_animacao():
             contador_direita_anterior = contador_direita_atual
 
             # Indica na tela o número de colisões
-            texto_contador = fonte.render(f"Número de colisões: {contador_atual}", True, BRANCO)
+            texto_contador = fonte.render(f"Número de colisões: {contador_atual}", True, PRETO)
             tela.blit(texto_contador, (x_parede_s + 30, 15))
 
-            # Caso a animação tenha acabado aperece um texto na tela
+            # Caso a animação tenha acabado aperece um texto e os botões na tela
             if animacao_ativa == False:
-                texto = fonte.render("Simulação concluída - Clique no X para fechar", True, BRANCO)
+                texto = fonte.render("Simulação concluída - Clique no X para fechar", True, PRETO)
                 tela.blit(texto, (LARGURA//2 - 200, 100))
 
-                # Botão de alterar parametros
-                texto_botao_p = fonte.render("Alterar Paramêtros", True, BRANCO)
-                botao_parametros = pygame.Rect(1240 - texto_botao_p.get_width(), 680 - texto_botao_p.get_height(), texto_botao_p.get_width() + 20, texto_botao_p.get_height() + 20)
-                # Desenhar botão
-                pygame.draw.rect(tela, VERMELHO, botao_parametros, border_radius=10)
-                tela.blit(texto_botao_p, (botao_parametros.x + 10, botao_parametros.y + 10))
-
-                # Botão de enviar
-                texto_botao_g = fonte.render("Mostrar Gráfico", True, BRANCO)
-                botao_grafico = pygame.Rect(1240 - texto_botao_g.get_width(), 580 - texto_botao_g.get_height(), texto_botao_g.get_width() + 20, texto_botao_g.get_height() + 20)
-                # Desenhar botão
-                pygame.draw.rect(tela, VERMELHO, botao_grafico, border_radius=10)
-                tela.blit(texto_botao_g, (botao_grafico.x + 10, botao_grafico.y + 10))
+                botao_parametros.draw(tela)
+                botao_grafico.draw(tela)
 
                 # Eventos da simulação
                 for evento in pygame.event.get():
                     if evento.type == pygame.MOUSEBUTTONDOWN: # Clicou com o botão do mouse
-                        if botao_parametros.collidepoint(evento.pos): # Clicou no botão de aletrar parametros
+                        if botao_parametros.rect.collidepoint(evento.pos): # Clicou no botão de aletrar parametros
                             # Sai da simulação, mantendo o programa ligado
                             simulacao_ativa = False
-                            return True
-                        if botao_grafico.collidepoint(evento.pos): # Clicou no botão de mostrar gráfico
+                            return False
+                        if botao_grafico.rect.collidepoint(evento.pos): # Clicou no botão de mostrar gráfico
                             # Mostra o gráfico
                             simulacao_ativa = mostrar_grafico()
-                            if not simulacao_ativa: # Confere se o programa continua ligado
-                                return False
+                            if not simulacao_ativa: # Confere se a simulação continua ligada
+                                return True
 
 
             pygame.display.flip()  # Atualiza a tela
@@ -496,40 +514,72 @@ def rodar_animacao():
     finally:
         pass
 
+# Mostrar tela inicial
+def mostrar_tela_inicial():
+    tela_inicial = True
+    while tela_inicial:
+        tela.blit(background, (0, 0))
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT: # Se clicar no x, desliga o programa
+                reiniciar = False
+                pygame.quit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RETURN: # Se apertar enter, sai da tela inicial e inicia o programa
+                tela_inicial = False
+                return True
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE: # Se apertar esc, desliga o programa
+                reiniciar = False
+                pygame.quit()
+
+        pygame.display.flip() 
+
 """-----------INICIAR PYGAME-----------"""
 
 pygame.init()
 pygame.mixer.init()
 
 # Inicialização da fonte
-fonte = pygame.font.SysFont('Arial', 36)
+fonte = pygame.font.SysFont('Helvetica', 25)
                 
 # Configurações da janela
-
-LARGURA, ALTURA = 1280, 740
+LARGURA, ALTURA = 1280, 720
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Simulação de Colisão")
 
 # Cores
-
 BRANCO = (255, 255, 255)
 VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 PRETO = (0, 0, 0)
 CINZA = (200, 200, 200)
 
+# Background
+background = pygame.image.load("Imagens/inicio.png")
+
 # Valores iniciais dos parâmetros
 parametros = [1, 1000000, 0, -15, 50, 100, 20, 40, 120000]
 
 # Loop - Programa
-
 reiniciar = True
+voltar = True
 
 while reiniciar:
-    # Abre o menu e recebe os parâmetros definidos pelo usuário
-    parametros = abrir_menu(parametros)
+    if voltar:
+        # Mostra tela inicial
+        reiniciar = mostrar_tela_inicial()
+    
+    if not reiniciar:
+        break
 
-    if parametros != False: # Checa se o programa ainda está rodando
+    # Abre o menu e recebe os parâmetros definidos pelo usuário
+    novos_parametros = abrir_menu(parametros)
+
+    if novos_parametros == False: # Checa se não recebeu os parâmetros
+        # Volta para a tela inicial
+        voltar = True
+        continue 
+    else:
+        parametros = novos_parametros
         # Define os parÃmetros conforme os valores conferidos pelo usuário
         m1, m2, v01, v02, x01, x02, x_parede, tempo_simulacao, fps = parametros
         l1, l2 = largura_pela_massa(m1), largura_pela_massa(m2)
@@ -537,7 +587,5 @@ while reiniciar:
         # Realiza a simulação
         frames, t, x1, x2 = realizar_simulacao()
 
-        # Roda a animação e recebe True e deve reiniciar ou False se deve parar o programa
-        reiniciar = rodar_animacao()
-    else:
-        reiniciar = False
+        # Roda a animação e recebe True se deve voltar ou False se deve parar o programa
+        voltar = rodar_animacao()
